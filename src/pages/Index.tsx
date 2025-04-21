@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PromptInputPanel } from "@/components/PromptInputPanel";
@@ -20,7 +19,6 @@ import {
   ChevronDown,
   ChevronUp,
   Activity,
-  // Removing the import for ChevronRight since we define it locally
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
@@ -61,7 +59,6 @@ const Index = () => {
       return;
     }
 
-    // Create a blob and download it
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -100,6 +97,8 @@ const Index = () => {
     { icon: <Calendar />, label: "History", path: "/history" },
     { icon: <FileText />, label: "Reports", path: "/reports" },
     { icon: <Shield />, label: "Rules", path: "/rules" },
+    { icon: <User />, label: "About", path: "/about" },
+    { icon: <User />, label: "About Developer", path: "/about-developer" },
   ];
 
   const secondaryLinks = [
@@ -109,7 +108,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex">
-      {/* Sidebar */}
       <div className={`glass h-screen ${sidebarCollapsed ? 'w-16' : 'w-64'} transition-all duration-300 ease-in-out flex flex-col border-r border-border/40`}>
         <div className="p-4 flex items-center justify-between border-b border-border/40">
           <div className={`flex items-center gap-3 ${sidebarCollapsed ? 'justify-center' : ''}`}>
@@ -180,7 +178,6 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
         <header className="border-b border-border/40 bg-background/50 backdrop-blur-sm">
           <div className="container mx-auto py-4 px-4 flex justify-between items-center">
@@ -214,7 +211,6 @@ const Index = () => {
 
         <main className="container mx-auto p-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            {/* Left Panel: Input */}
             <div className="space-y-6">
               <Card className="glass card-animated-border overflow-hidden">
                 <CardContent className="p-0">
@@ -223,7 +219,6 @@ const Index = () => {
               </Card>
             </div>
 
-            {/* Right Panel: Analysis */}
             <div className="space-y-6">
               <Card className="glass card-animated-border overflow-hidden min-h-[300px]">
                 <CardContent className="p-0">
@@ -233,7 +228,6 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Remove the dashboard section and add a button to go to dashboard */}
           <div className="flex items-center justify-center mt-8">
             <Button 
               variant="default" 
@@ -263,7 +257,6 @@ const Index = () => {
   );
 };
 
-// ChevronLeft icon for sidebar toggle
 const ChevronLeft = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -281,7 +274,6 @@ const ChevronLeft = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-// ChevronRight icon for sidebar toggle
 const ChevronRight = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"

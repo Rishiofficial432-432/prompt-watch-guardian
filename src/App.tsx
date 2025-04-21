@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -14,6 +15,9 @@ import Reports from "./pages/Reports";
 import Rules from "./pages/Rules";
 import Account from "./pages/Account";
 import Settings from "./pages/Settings";
+// Add new pages
+import About from "./pages/About";
+import AboutDeveloper from "./pages/AboutDeveloper";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +38,8 @@ const App = () => (
             <Route path="/rules" element={<Rules />} />
             <Route path="/account" element={<Account />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/about-developer" element={<AboutDeveloper />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
