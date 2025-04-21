@@ -20,7 +20,7 @@ import {
   ChevronDown,
   ChevronUp,
   Activity,
-  ChevronRight
+  // Removing the import for ChevronRight since we define it locally
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
