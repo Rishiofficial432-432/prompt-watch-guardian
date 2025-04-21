@@ -3,46 +3,38 @@
 @tailwind components;
 @tailwind utilities;
 
+/* --- Glassmorphism + gradients + animation & color tweaks for One UI vibes --- */
+
 @layer base {
   :root {
-    --background: 222 33% 18%;
-    --foreground: 210 40% 98%;
-
-    --card: 222 33% 13%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222 33% 13%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 254 82% 74%;
+    --background: 223 30% 97%;
+    --foreground: 220 15% 20%;
+    --card: 223 30% 99%;
+    --card-foreground: 220 15% 20%;
+    --primary: 253 77% 70%;
     --primary-foreground: 0 0% 100%;
+    --secondary: 183 48% 96%;
+    --secondary-foreground: 220 15% 20%;
+    --muted: 223 30% 90%;
+    --muted-foreground: 215 10% 52%;
+    --accent: 240 100% 85%;
+    --accent-foreground: 240 60% 32%;
+    --destructive: 350 83% 63%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 219 13% 91%;
+    --ring: 253 77% 70%;
+    --radius: 1.2rem;
+    /* sidebar, etc. can remain as is */
+    --risk-high: #EA4C4C;
+    --risk-medium: #F7B955;
+    --risk-low: #4CAF50;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 254 82% 74%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 254 82% 74%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* New glass effect & gradients */
+    --glass-bg: rgba(245, 245, 255, 0.75);
+    --glass-border: rgba(180, 180, 230, 0.15);
+    --shadow-glass: 0 8px 42px 0 rgba(76, 110, 245, 0.12), 0 1.5px 4px 0 rgba(100, 110, 180, 0.09);
+    --soft-gradient: linear-gradient(135deg,#fbed96 0%, #d1e9ff 100%);
+    --primary-gradient: linear-gradient(90deg,#9b87f5 0%, #0EA5E9 100%);
   }
 }
 
@@ -52,6 +44,59 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    min-height: 100vh;
+    font-family: 'Segoe UI', 'Inter', 'Roboto', 'Helvetica', sans-serif;
+    @apply bg-background text-foreground antialiased;
+    background: var(--soft-gradient);
+    /* fallback color for fast load */
+  }
+
+  /* Glassmorphism utility (for cards, panels...) */
+  .glass {
+    backdrop-filter: blur(16px) saturate(170%);
+    -webkit-backdrop-filter: blur(16px) saturate(170%);
+    background: var(--glass-bg);
+    border-radius: var(--radius);
+    border: 2px solid var(--glass-border);
+    box-shadow: var(--shadow-glass);
+    transition: box-shadow 0.3s cubic-bezier(.25,.8,.25,1);
+  }
+
+  /* Animated underline (One UI, for links) */
+  .animate-underline {
+    @apply relative after:absolute after:w-full after:h-0.5 after:left-0 after:bottom-[-2px] after:rounded after:bg-primary after:origin-bottom-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300;
+  }
+
+  /* Pulse animation for loading or active indicators */
+  .pulse {
+    animation: pulse 2.5s cubic-bezier(0.4,0,0.6,1) infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: .7 }
+    50% { opacity: 1 }
+  }
+
+  /* Soft fade for in-view components */
+  .fade-in {
+    opacity: 0;
+    animation: fade-in 0.6s ease-in-out forwards;
+  }
+  @keyframes fade-in {
+    to { opacity: 1 }
   }
 }
+
+/* For cards with animated borders */
+.card-animated-border {
+  background: var(--glass-bg);
+  border: 2.5px solid transparent;
+  border-radius: var(--radius);
+  background-image: 
+    var(--soft-gradient), 
+    linear-gradient(135deg,rgba(170,190,250,0.12) 0%,rgba(120,175,240,0.14) 120%);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  box-shadow: var(--shadow-glass);
+  transition: box-shadow 0.4s cubic-bezier(.4,0,.2,1);
+}
+
