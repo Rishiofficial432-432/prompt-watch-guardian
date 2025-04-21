@@ -6,8 +6,24 @@ import { RiskAnalysisPanel } from "@/components/RiskAnalysisPanel";
 import { Dashboard } from "@/components/Dashboard";
 import { getDashboardData, exportToCSV, clearHistory } from "@/services/mockBackend";
 import { PromptData, DashboardData, RiskAnalysisResult } from "@/types/models";
-import { useToast } from "@/components/ui/use-toast";
-import { ArrowDown, Download, FileText } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { 
+  ArrowDown, 
+  Download, 
+  FileText, 
+  Shield, 
+  Bell, 
+  Settings, 
+  User, 
+  Calendar, 
+  Search,
+  ChevronDown,
+  ChevronUp,
+  Activity,
+  ChevronRight
+} from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { Card, CardContent } from "@/components/ui/card";
 
 const Index = () => {
   const [analysisResult, setAnalysisResult] = useState<RiskAnalysisResult | null>(null);
@@ -16,11 +32,18 @@ const Index = () => {
     categoryBreakdown: { biosafety: 0, cybersecurity: 0 },
     recentScores: []
   });
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { toast } = useToast();
 
   const handleAnalysisResult = (result: PromptData) => {
     setAnalysisResult(result.riskAnalysis);
     setDashboardData(getDashboardData());
+    
+    toast({
+      title: "Analysis Complete",
+      description: `Safety score: ${result.riskAnalysis.overallScore}/100`,
+      variant: result.riskAnalysis.overallScore < 50 ? "destructive" : "default",
+    });
   };
 
   const handleExportCSV = () => {
@@ -68,48 +91,187 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <header className="border-b border-border">
-        <div className="container mx-auto py-4 px-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full bg-primary"></div>
-            <h1 className="text-xl font-bold">Guardrail Visualizer</h1>
+    <div className="min-h-screen bg-background text-foreground flex">
+      {/* Sidebar */}
+      <div className={`glass h-screen ${sidebarCollapsed ? 'w-16' : 'w-64'} transition-all duration-300 ease-in-out flex flex-col border-r border-border/40`}>
+        <div className="p-4 flex items-center justify-between border-b border-border/40">
+          <div className={`flex items-center gap-3 ${sidebarCollapsed ? 'justify-center' : ''}`}>
+            <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+              <Shield className="w-4 h-4 text-white" />
+            </div>
+            {!sidebarCollapsed && <h1 className="text-lg font-bold slide-in-left">Guardrail</h1>}
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={handleClearHistory}>
-              Clear History
-            </Button>
-            <Button size="sm" onClick={handleExportCSV}>
-              <Download className="mr-2 h-4 w-4" />
-              Export CSV
-            </Button>
+          <button 
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            className="text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {sidebarCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+          </button>
+        </div>
+        
+        <div className="flex-1 overflow-y-auto p-3">
+          <nav>
+            <ul className="space-y-2">
+              {[
+                { icon: <Activity />, label: "Dashboard", active: true },
+                { icon: <Search />, label: "Analysis" },
+                { icon: <Bell />, label: "Alerts" },
+                { icon: <Calendar />, label: "History" },
+                { icon: <FileText />, label: "Reports" },
+                { icon: <Shield />, label: "Rules" },
+              ].map((item, index) => (
+                <li key={index}>
+                  <a 
+                    href="#" 
+                    className={`flex items-center gap-3 p-2 rounded-lg text-sm transition-all duration-200
+                      ${item.active ? 'bg-primary/10 text-primary' : 'hover:bg-background/80'}`}
+                  >
+                    <span>{item.icon}</span>
+                    {!sidebarCollapsed && <span className="slide-in-left">{item.label}</span>}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            
+            <Separator className="my-4" />
+            
+            <ul className="space-y-2">
+              {[
+                { icon: <User />, label: "Account" },
+                { icon: <Settings />, label: "Settings" },
+              ].map((item, index) => (
+                <li key={index}>
+                  <a 
+                    href="#" 
+                    className="flex items-center gap-3 p-2 rounded-lg text-sm hover:bg-background/80 transition-all duration-200"
+                  >
+                    <span>{item.icon}</span>
+                    {!sidebarCollapsed && <span className="slide-in-left">{item.label}</span>}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+        
+        <div className="p-4 border-t border-border/40">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-accent-foreground/10 flex items-center justify-center">
+              <User className="w-4 h-4 text-accent-foreground" />
+            </div>
+            {!sidebarCollapsed && (
+              <div className="text-sm slide-in-left">
+                <p className="font-medium">Admin User</p>
+                <p className="text-xs text-muted-foreground">admin@guardrail.ai</p>
+              </div>
+            )}
           </div>
         </div>
-      </header>
+      </div>
       
-      <main className="container mx-auto p-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left Panel: Input */}
-          <div className="space-y-6">
-            <PromptInputPanel onAnalysisResult={handleAnalysisResult} />
+      {/* Main Content */}
+      <div className="flex-1 overflow-y-auto">
+        <header className="border-b border-border/40 bg-background/50 backdrop-blur-sm">
+          <div className="container mx-auto py-4 px-4 flex justify-between items-center">
+            <div className="flex items-center gap-6">
+              <h1 className="text-xl font-bold slide-in-left">Guardrail Visualizer</h1>
+              
+              <div className="hidden md:flex items-center gap-4">
+                <a href="#" className="text-sm text-muted-foreground hover:text-foreground animate-underline">Dashboard</a>
+                <a href="#" className="text-sm text-muted-foreground hover:text-foreground animate-underline">Analysis</a>
+                <a href="#" className="text-sm text-muted-foreground hover:text-foreground animate-underline">Documentation</a>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <div className="relative glass p-2 rounded-full cursor-pointer">
+                <Bell className="w-5 h-5" />
+                <span className="absolute top-0 right-0 w-2 h-2 rounded-full bg-primary"></span>
+              </div>
+              
+              <Button variant="outline" size="sm" onClick={handleClearHistory}>
+                Clear History
+              </Button>
+              
+              <Button size="sm" className="action-button" onClick={handleExportCSV}>
+                <Download className="h-4 w-4" />
+                Export CSV
+              </Button>
+            </div>
+          </div>
+        </header>
+        
+        <main className="container mx-auto p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            {/* Left Panel: Input */}
+            <div className="space-y-6">
+              <Card className="glass card-animated-border overflow-hidden">
+                <CardContent className="p-0">
+                  <PromptInputPanel onAnalysisResult={handleAnalysisResult} />
+                </CardContent>
+              </Card>
+            </div>
+            
+            {/* Right Panel: Analysis */}
+            <div className="space-y-6">
+              <Card className="glass card-animated-border overflow-hidden min-h-[300px]">
+                <CardContent className="p-0">
+                  <RiskAnalysisPanel analysisResult={analysisResult} />
+                </CardContent>
+              </Card>
+            </div>
           </div>
           
-          {/* Right Panel: Analysis & Dashboard */}
-          <div className="space-y-6">
-            <RiskAnalysisPanel analysisResult={analysisResult} />
-            <h2 className="text-xl font-semibold mt-6">Safety Dashboard</h2>
+          {/* Dashboard Section */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold slide-in-left">Safety Dashboard</h2>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">Last updated: Just now</span>
+                <Button variant="ghost" size="sm">
+                  <ArrowDown className="h-4 w-4 mr-1" />
+                  Refresh
+                </Button>
+              </div>
+            </div>
+            
             <Dashboard data={dashboardData} />
           </div>
-        </div>
-      </main>
-      
-      <footer className="border-t border-border py-4 mt-8">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          Guardrail Visualizer — Local LLM Safety Analysis Tool
-        </div>
-      </footer>
+        </main>
+        
+        <footer className="border-t border-border/40 py-6 mt-8 bg-background/50 backdrop-blur-sm">
+          <div className="container mx-auto px-4 text-center">
+            <p className="text-sm text-muted-foreground">
+              Guardrail Visualizer — Advanced LLM Safety Analysis Tool © 2025
+            </p>
+            <div className="flex justify-center gap-4 mt-2">
+              <a href="#" className="text-xs text-muted-foreground hover:text-foreground animate-underline">Privacy Policy</a>
+              <a href="#" className="text-xs text-muted-foreground hover:text-foreground animate-underline">Terms of Service</a>
+              <a href="#" className="text-xs text-muted-foreground hover:text-foreground animate-underline">Documentation</a>
+            </div>
+          </div>
+        </footer>
+      </div>
     </div>
   );
 };
+
+// ChevronLeft icon for sidebar toggle
+const ChevronLeft = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    width="24" 
+    height="24" 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    {...props}
+  >
+    <path d="m15 18-6-6 6-6"/>
+  </svg>
+);
 
 export default Index;

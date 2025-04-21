@@ -3,38 +3,43 @@
 @tailwind components;
 @tailwind utilities;
 
-/* --- Glassmorphism + gradients + animation & color tweaks for One UI vibes --- */
+/* --- Modern UI with iOS animations, glassmorphism + gradients --- */
 
 @layer base {
   :root {
-    --background: 223 30% 97%;
-    --foreground: 220 15% 20%;
-    --card: 223 30% 99%;
-    --card-foreground: 220 15% 20%;
-    --primary: 253 77% 70%;
+    --background: 225 30% 96%;
+    --foreground: 224 20% 20%;
+    --card: 225 30% 99%;
+    --card-foreground: 220 18% 20%;
+    --primary: 253 77% 68%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 183 48% 96%;
-    --secondary-foreground: 220 15% 20%;
-    --muted: 223 30% 90%;
-    --muted-foreground: 215 10% 52%;
-    --accent: 240 100% 85%;
+    --secondary: 183 60% 96%;
+    --secondary-foreground: 220 18% 20%;
+    --muted: 224 30% 90%;
+    --muted-foreground: 215 12% 52%;
+    --accent: 240 100% 87%;
     --accent-foreground: 240 60% 32%;
     --destructive: 350 83% 63%;
     --destructive-foreground: 0 0% 100%;
-    --border: 219 13% 91%;
+    --border: 222 15% 91%;
     --ring: 253 77% 70%;
-    --radius: 1.2rem;
-    /* sidebar, etc. can remain as is */
+    --radius: 1.4rem;
+    
+    /* Risk colors */
     --risk-high: #EA4C4C;
     --risk-medium: #F7B955;
     --risk-low: #4CAF50;
 
-    /* New glass effect & gradients */
-    --glass-bg: rgba(245, 245, 255, 0.75);
-    --glass-border: rgba(180, 180, 230, 0.15);
+    /* Glass effect & gradients */
+    --glass-bg: rgba(245, 248, 255, 0.75);
+    --glass-border: rgba(180, 190, 230, 0.15);
     --shadow-glass: 0 8px 42px 0 rgba(76, 110, 245, 0.12), 0 1.5px 4px 0 rgba(100, 110, 180, 0.09);
-    --soft-gradient: linear-gradient(135deg,#fbed96 0%, #d1e9ff 100%);
-    --primary-gradient: linear-gradient(90deg,#9b87f5 0%, #0EA5E9 100%);
+    --soft-gradient: linear-gradient(135deg, #f8fbff 0%, #d3e6ff 100%);
+    --primary-gradient: linear-gradient(90deg, #9b87f5 0%, #0EA5E9 100%);
+    --accent-gradient: linear-gradient(135deg, #f5f4ff 0%, #e2d8ff 100%);
+    --success-gradient: linear-gradient(90deg, #4CAF50 0%, #8BC34A 100%);
+    --warning-gradient: linear-gradient(90deg, #F7B955 0%, #FFC107 100%);
+    --danger-gradient: linear-gradient(90deg, #EA4C4C 0%, #FF5252 100%);
   }
 }
 
@@ -43,46 +48,118 @@
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     min-height: 100vh;
-    font-family: 'Segoe UI', 'Inter', 'Roboto', 'Helvetica', sans-serif;
+    font-family: 'SF Pro Display', 'Segoe UI', 'Inter', 'Roboto', sans-serif;
     @apply bg-background text-foreground antialiased;
     background: var(--soft-gradient);
     /* fallback color for fast load */
   }
 
-  /* Glassmorphism utility (for cards, panels...) */
+  /* Glassmorphism utilities with iOS-style appearance */
   .glass {
-    backdrop-filter: blur(16px) saturate(170%);
-    -webkit-backdrop-filter: blur(16px) saturate(170%);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
     background: var(--glass-bg);
     border-radius: var(--radius);
     border: 2px solid var(--glass-border);
     box-shadow: var(--shadow-glass);
-    transition: box-shadow 0.3s cubic-bezier(.25,.8,.25,1);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .glass:hover {
+    box-shadow: 0 10px 50px 0 rgba(76, 110, 245, 0.18), 0 2px 6px 0 rgba(100, 110, 180, 0.12);
+    transform: translateY(-2px);
   }
 
-  /* Animated underline (One UI, for links) */
+  /* iOS-style animated underline */
   .animate-underline {
-    @apply relative after:absolute after:w-full after:h-0.5 after:left-0 after:bottom-[-2px] after:rounded after:bg-primary after:origin-bottom-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300;
+    @apply relative after:absolute after:w-full after:h-0.5 after:left-0 after:bottom-[-2px] after:rounded-full after:bg-primary after:origin-bottom-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-in-out;
   }
 
-  /* Pulse animation for loading or active indicators */
+  /* Pulse animation for loading or active indicators (iOS style) */
   .pulse {
     animation: pulse 2.5s cubic-bezier(0.4,0,0.6,1) infinite;
   }
   @keyframes pulse {
-    0%,100% { opacity: .7 }
-    50% { opacity: 1 }
+    0%,100% { opacity: .7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
   }
 
-  /* Soft fade for in-view components */
+  /* Modern iOS-inspired fade for in-view components */
   .fade-in {
     opacity: 0;
-    animation: fade-in 0.6s ease-in-out forwards;
+    animation: fade-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
   @keyframes fade-in {
-    to { opacity: 1 }
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Staggered fade-in for lists */
+  .stagger-fade-in > * {
+    opacity: 0;
+    animation: stagger-fade-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  
+  .stagger-fade-in > *:nth-child(1) { animation-delay: 0.1s; }
+  .stagger-fade-in > *:nth-child(2) { animation-delay: 0.2s; }
+  .stagger-fade-in > *:nth-child(3) { animation-delay: 0.3s; }
+  .stagger-fade-in > *:nth-child(4) { animation-delay: 0.4s; }
+  .stagger-fade-in > *:nth-child(5) { animation-delay: 0.5s; }
+  .stagger-fade-in > *:nth-child(6) { animation-delay: 0.6s; }
+  
+  @keyframes stagger-fade-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* iOS-style scale in animation */
+  .scale-in {
+    animation: scale-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes scale-in {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  
+  /* iOS-style bounce animation */
+  .bounce {
+    animation: bounce 1s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  /* Smooth slide animations */
+  .slide-in-right {
+    animation: slide-in-right 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes slide-in-right {
+    from { transform: translateX(30px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  
+  .slide-in-left {
+    animation: slide-in-left 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes slide-in-left {
+    from { transform: translateX(-30px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  
+  /* 3D Card tilt effect */
+  .card-tilt {
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+  }
+  .card-tilt:hover {
+    transform: perspective(1000px) rotateX(2deg) rotateY(2deg) scale3d(1.02, 1.02, 1.02);
   }
 }
 
@@ -93,10 +170,67 @@
   border-radius: var(--radius);
   background-image: 
     var(--soft-gradient), 
-    linear-gradient(135deg,rgba(170,190,250,0.12) 0%,rgba(120,175,240,0.14) 120%);
+    linear-gradient(135deg, rgba(170,190,250,0.12) 0%, rgba(120,175,240,0.14) 120%);
   background-origin: border-box;
   background-clip: padding-box, border-box;
   box-shadow: var(--shadow-glass);
-  transition: box-shadow 0.4s cubic-bezier(.4,0,.2,1);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.card-animated-border:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 50px 0 rgba(76, 110, 245, 0.18);
+}
+
+/* iOS-style scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(155, 135, 245, 0.3);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+/* Action button with animation */
+.action-button {
+  @apply rounded-full bg-primary text-white px-4 py-2 flex items-center gap-2 transition-all duration-300;
+  box-shadow: 0 4px 12px rgba(155, 135, 245, 0.4);
+}
+
+.action-button:hover {
+  @apply bg-primary/90;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(155, 135, 245, 0.5);
+}
+
+.action-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(155, 135, 245, 0.3);
+}
+
+/* iOS-style status badge */
+.status-badge {
+  @apply inline-flex items-center rounded-full text-xs font-medium py-1 px-2.5;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.status-badge-high {
+  background: var(--danger-gradient);
+  color: white;
+}
+
+.status-badge-medium {
+  background: var(--warning-gradient);
+  color: rgb(75, 45, 0);
+}
+
+.status-badge-low {
+  background: var(--success-gradient);
+  color: white;
+}
