@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PromptInputPanel } from "@/components/PromptInputPanel";
@@ -18,7 +19,7 @@ import {
   Search,
   ChevronDown,
   ChevronUp,
-  Activity,
+  Info
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
@@ -91,13 +92,13 @@ const Index = () => {
   };
 
   const navLinks = [
-    { icon: <Activity />, label: "Dashboard", path: "/dashboard" },
+    { icon: <Shield />, label: "Dashboard", path: "/dashboard" },
     { icon: <Search />, label: "Analysis", path: "/analysis" },
     { icon: <Bell />, label: "Alerts", path: "/alerts" },
     { icon: <Calendar />, label: "History", path: "/history" },
     { icon: <FileText />, label: "Reports", path: "/reports" },
     { icon: <Shield />, label: "Rules", path: "/rules" },
-    { icon: <User />, label: "About", path: "/about" },
+    { icon: <Info />, label: "About", path: "/about" },
     { icon: <User />, label: "About Developer", path: "/about-developer" },
   ];
 
@@ -292,3 +293,4 @@ const ChevronRight = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 export default Index;
+

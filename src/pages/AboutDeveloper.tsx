@@ -16,7 +16,8 @@ const AboutDeveloper = () => (
         </div>
       </div>
       <div className="space-y-2 text-center">
-        <p className="text-xl font-semibold text-primary">Founder & Full Stack Developer</p>
+        <p className="text-xl font-semibold text-primary">Smit</p>
+        <p className="text-lg">Founder & Full Stack Developer</p>
         <p className="text-lg">AVEON AI INDIA</p>
         <p className="text-md text-muted-foreground">
           This project is developed and maintained by a passionate developer dedicated to safe, responsible, and innovative AI solutions.
@@ -27,3 +28,4 @@ const AboutDeveloper = () => (
 );
 
 export default AboutDeveloper;
+
