@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Index = () => {
   const [analysisResult, setAnalysisResult] = useState<RiskAnalysisResult | null>(null);
@@ -36,6 +36,7 @@ const Index = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { toast } = useToast();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const handleAnalysisResult = (result: PromptData) => {
     setAnalysisResult(result.riskAnalysis);
@@ -232,20 +233,16 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Dashboard Section */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold slide-in-left">Safety Dashboard</h2>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">Last updated: Just now</span>
-                <Button variant="ghost" size="sm">
-                  <ArrowDown className="h-4 w-4 mr-1" />
-                  Refresh
-                </Button>
-              </div>
-            </div>
-
-            <DashboardComponent data={dashboardData} />
+          {/* Remove the dashboard section and add a button to go to dashboard */}
+          <div className="flex items-center justify-center mt-8">
+            <Button 
+              variant="default" 
+              size="lg" 
+              className="px-7 py-3 font-bold text-lg shadow-2xl" 
+              onClick={() => navigate("/dashboard")}
+            >
+              <Shield className="w-5 h-5 mr-2" /> Open Safety Dashboard
+            </Button>
           </div>
         </main>
 
