@@ -1,5 +1,5 @@
 
-import { Book, Info, User } from "lucide-react";
+import { Book, Info, User, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { 
   Tabs, 
