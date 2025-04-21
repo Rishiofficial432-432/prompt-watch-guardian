@@ -65,7 +65,7 @@ const Index = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `guardrail-export-${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute("download", `truthguard-export-${new Date().toISOString().slice(0, 10)}.csv`);
     link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();
@@ -115,7 +115,7 @@ const Index = () => {
             <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
               <Shield className="w-4 h-4 text-white" />
             </div>
-            {!sidebarCollapsed && <h1 className="text-lg font-bold slide-in-left">Guardrail</h1>}
+            {!sidebarCollapsed && <h1 className="text-lg font-bold slide-in-left">Truth Guard</h1>}
           </div>
           <button
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
@@ -172,7 +172,7 @@ const Index = () => {
             {!sidebarCollapsed && (
               <div className="text-sm slide-in-left">
                 <p className="font-medium">Admin User</p>
-                <p className="text-xs text-muted-foreground">admin@guardrail.ai</p>
+                <p className="text-xs text-muted-foreground">admin@truthguard.ai</p>
               </div>
             )}
           </div>
@@ -184,7 +184,7 @@ const Index = () => {
         <header className="border-b border-border/40 bg-background/50 backdrop-blur-sm">
           <div className="container mx-auto py-4 px-4 flex justify-between items-center">
             <div className="flex items-center gap-6">
-              <h1 className="text-xl font-bold slide-in-left">Guardrail Visualizer</h1>
+              <h1 className="text-xl font-bold slide-in-left">Truth Guard Visualizer</h1>
 
               <div className="hidden md:flex items-center gap-4">
                 <Link to="/dashboard" className={`text-sm text-muted-foreground hover:text-foreground animate-underline ${location.pathname === "/dashboard" ? "text-primary font-semibold" : ""}`}>Dashboard</Link>
@@ -252,7 +252,7 @@ const Index = () => {
         <footer className="border-t border-border/40 py-6 mt-8 bg-background/50 backdrop-blur-sm">
           <div className="container mx-auto px-4 text-center">
             <p className="text-sm text-muted-foreground">
-              Guardrail Visualizer — Advanced LLM Safety Analysis Tool © 2025
+              Truth Guard Visualizer — Advanced LLM Safety Analysis Tool © 2025
             </p>
             <div className="flex justify-center gap-4 mt-2">
               <a href="#" className="text-xs text-muted-foreground hover:text-foreground animate-underline">Privacy Policy</a>
@@ -281,6 +281,24 @@ const ChevronLeft = (props: React.SVGProps<SVGSVGElement>) => (
     {...props}
   >
     <path d="m15 18-6-6 6-6" />
+  </svg>
+);
+
+// ChevronRight icon for sidebar toggle
+const ChevronRight = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="m9 18 6-6-6-6" />
   </svg>
 );
 
