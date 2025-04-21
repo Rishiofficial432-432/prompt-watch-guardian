@@ -3,19 +3,19 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PromptInputPanel } from "@/components/PromptInputPanel";
 import { RiskAnalysisPanel } from "@/components/RiskAnalysisPanel";
-import { Dashboard } from "@/components/Dashboard";
+import { Dashboard as DashboardComponent } from "@/components/Dashboard";
 import { getDashboardData, exportToCSV, clearHistory } from "@/services/mockBackend";
 import { PromptData, DashboardData, RiskAnalysisResult } from "@/types/models";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  ArrowDown, 
-  Download, 
-  FileText, 
-  Shield, 
-  Bell, 
-  Settings, 
-  User, 
-  Calendar, 
+import {
+  ArrowDown,
+  Download,
+  FileText,
+  Shield,
+  Bell,
+  Settings,
+  User,
+  Calendar,
   Search,
   ChevronDown,
   ChevronUp,
@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
+import { Link, useLocation } from "react-router-dom";
 
 const Index = () => {
   const [analysisResult, setAnalysisResult] = useState<RiskAnalysisResult | null>(null);
@@ -34,11 +35,12 @@ const Index = () => {
   });
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { toast } = useToast();
+  const location = useLocation();
 
   const handleAnalysisResult = (result: PromptData) => {
     setAnalysisResult(result.riskAnalysis);
     setDashboardData(getDashboardData());
-    
+
     toast({
       title: "Analysis Complete",
       description: `Safety score: ${result.riskAnalysis.overallScore}/100`,
@@ -48,7 +50,7 @@ const Index = () => {
 
   const handleExportCSV = () => {
     const csvContent = exportToCSV();
-    
+
     if (csvContent === "No data to export") {
       toast({
         title: "Nothing to Export",
@@ -57,7 +59,7 @@ const Index = () => {
       });
       return;
     }
-    
+
     // Create a blob and download it
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
@@ -68,7 +70,7 @@ const Index = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    
+
     toast({
       title: "Export Complete",
       description: "CSV file has been downloaded.",
@@ -83,12 +85,26 @@ const Index = () => {
       categoryBreakdown: { biosafety: 0, cybersecurity: 0 },
       recentScores: []
     });
-    
+
     toast({
       title: "History Cleared",
       description: "All analysis history has been cleared.",
     });
   };
+
+  const navLinks = [
+    { icon: <Activity />, label: "Dashboard", path: "/dashboard" },
+    { icon: <Search />, label: "Analysis", path: "/analysis" },
+    { icon: <Bell />, label: "Alerts", path: "/alerts" },
+    { icon: <Calendar />, label: "History", path: "/history" },
+    { icon: <FileText />, label: "Reports", path: "/reports" },
+    { icon: <Shield />, label: "Rules", path: "/rules" },
+  ];
+
+  const secondaryLinks = [
+    { icon: <User />, label: "Account", path: "/account" },
+    { icon: <Settings />, label: "Settings", path: "/settings" },
+  ];
 
   return (
     <div className="min-h-screen bg-background text-foreground flex">
@@ -101,59 +117,53 @@ const Index = () => {
             </div>
             {!sidebarCollapsed && <h1 className="text-lg font-bold slide-in-left">Guardrail</h1>}
           </div>
-          <button 
+          <button
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
             className="text-muted-foreground hover:text-foreground transition-colors"
+            aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {sidebarCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
           </button>
         </div>
-        
+
         <div className="flex-1 overflow-y-auto p-3">
           <nav>
             <ul className="space-y-2">
-              {[
-                { icon: <Activity />, label: "Dashboard", active: true },
-                { icon: <Search />, label: "Analysis" },
-                { icon: <Bell />, label: "Alerts" },
-                { icon: <Calendar />, label: "History" },
-                { icon: <FileText />, label: "Reports" },
-                { icon: <Shield />, label: "Rules" },
-              ].map((item, index) => (
+              {navLinks.map((item, index) => (
                 <li key={index}>
-                  <a 
-                    href="#" 
-                    className={`flex items-center gap-3 p-2 rounded-lg text-sm transition-all duration-200
-                      ${item.active ? 'bg-primary/10 text-primary' : 'hover:bg-background/80'}`}
+                  <Link
+                    to={item.path}
+                    className={`flex items-center gap-3 p-2 rounded-lg text-sm transition-all duration-200 w-full
+                      ${location.pathname === item.path ? 'bg-primary/10 text-primary' : 'hover:bg-background/80'}
+                      focus:outline-none focus:ring-2 focus:ring-ring`}
                   >
                     <span>{item.icon}</span>
                     {!sidebarCollapsed && <span className="slide-in-left">{item.label}</span>}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
-            
+
             <Separator className="my-4" />
-            
+
             <ul className="space-y-2">
-              {[
-                { icon: <User />, label: "Account" },
-                { icon: <Settings />, label: "Settings" },
-              ].map((item, index) => (
+              {secondaryLinks.map((item, index) => (
                 <li key={index}>
-                  <a 
-                    href="#" 
-                    className="flex items-center gap-3 p-2 rounded-lg text-sm hover:bg-background/80 transition-all duration-200"
+                  <Link
+                    to={item.path}
+                    className={`flex items-center gap-3 p-2 rounded-lg text-sm hover:bg-background/80 transition-all duration-200 w-full
+                      ${location.pathname === item.path ? 'bg-primary/10 text-primary' : ''}
+                      focus:outline-none focus:ring-2 focus:ring-ring`}
                   >
                     <span>{item.icon}</span>
                     {!sidebarCollapsed && <span className="slide-in-left">{item.label}</span>}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </nav>
         </div>
-        
+
         <div className="p-4 border-t border-border/40">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-accent-foreground/10 flex items-center justify-center">
@@ -168,31 +178,31 @@ const Index = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
         <header className="border-b border-border/40 bg-background/50 backdrop-blur-sm">
           <div className="container mx-auto py-4 px-4 flex justify-between items-center">
             <div className="flex items-center gap-6">
               <h1 className="text-xl font-bold slide-in-left">Guardrail Visualizer</h1>
-              
+
               <div className="hidden md:flex items-center gap-4">
-                <a href="#" className="text-sm text-muted-foreground hover:text-foreground animate-underline">Dashboard</a>
-                <a href="#" className="text-sm text-muted-foreground hover:text-foreground animate-underline">Analysis</a>
+                <Link to="/dashboard" className={`text-sm text-muted-foreground hover:text-foreground animate-underline ${location.pathname === "/dashboard" ? "text-primary font-semibold" : ""}`}>Dashboard</Link>
+                <Link to="/analysis" className={`text-sm text-muted-foreground hover:text-foreground animate-underline ${location.pathname === "/analysis" ? "text-primary font-semibold" : ""}`}>Analysis</Link>
                 <a href="#" className="text-sm text-muted-foreground hover:text-foreground animate-underline">Documentation</a>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3">
               <div className="relative glass p-2 rounded-full cursor-pointer">
                 <Bell className="w-5 h-5" />
                 <span className="absolute top-0 right-0 w-2 h-2 rounded-full bg-primary"></span>
               </div>
-              
+
               <Button variant="outline" size="sm" onClick={handleClearHistory}>
                 Clear History
               </Button>
-              
+
               <Button size="sm" className="action-button" onClick={handleExportCSV}>
                 <Download className="h-4 w-4" />
                 Export CSV
@@ -200,7 +210,7 @@ const Index = () => {
             </div>
           </div>
         </header>
-        
+
         <main className="container mx-auto p-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             {/* Left Panel: Input */}
@@ -211,7 +221,7 @@ const Index = () => {
                 </CardContent>
               </Card>
             </div>
-            
+
             {/* Right Panel: Analysis */}
             <div className="space-y-6">
               <Card className="glass card-animated-border overflow-hidden min-h-[300px]">
@@ -221,7 +231,7 @@ const Index = () => {
               </Card>
             </div>
           </div>
-          
+
           {/* Dashboard Section */}
           <div className="mb-6">
             <div className="flex items-center justify-between mb-4">
@@ -234,11 +244,11 @@ const Index = () => {
                 </Button>
               </div>
             </div>
-            
-            <Dashboard data={dashboardData} />
+
+            <DashboardComponent data={dashboardData} />
           </div>
         </main>
-        
+
         <footer className="border-t border-border/40 py-6 mt-8 bg-background/50 backdrop-blur-sm">
           <div className="container mx-auto px-4 text-center">
             <p className="text-sm text-muted-foreground">
@@ -258,19 +268,19 @@ const Index = () => {
 
 // ChevronLeft icon for sidebar toggle
 const ChevronLeft = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width="24" 
-    height="24" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     {...props}
   >
-    <path d="m15 18-6-6 6-6"/>
+    <path d="m15 18-6-6 6-6" />
   </svg>
 );
 
